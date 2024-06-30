@@ -1,38 +1,21 @@
 <?php
-// 允許所有來源訪問這個API，設置CORS頭
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header("Access-Control-Allow-Origin:*");
 
-// 連接到MySQL數據庫
-$conn = mysqli_connect("localhost", "root", "", "g1");
-
-// 檢查數據庫連接是否成功
-if ($conn->connect_error) {
-    die("連接失敗: " . $conn->connect_error);
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
 }
+try {
+	require_once("bluealertKey.php");
 
-// 設置數據庫字符集為UTF-8
-mysqli_set_charset($conn, "utf8");
-
-// 從knowledge表中選擇所有數據
-$sql = "SELECT * FROM knowledge";
-$result = mysqli_query($conn, $sql);
-
-// 初始化一個空數組來存儲數據
-$data = array();
-if (mysqli_num_rows($result) > 0) {
-    // 遍歷結果集並將每一行添加到數組中
-    while ($row = mysqli_fetch_assoc($result)) {
-        $data[] = $row;
-    }
+	$sql = "select * from knowledge";
+	$knowledge = $pdo->query($sql);
+	$prodRows = $knowledge->fetchAll(PDO::FETCH_ASSOC);
+	$result = ["error" => false, "msg" => "", "knowledge" => $prodRows];
+} 
+catch (PDOException $e) {
+	$result = ["error" => true, "msg" => $e->getMessage()];
 }
+echo json_encode($result, JSON_NUMERIC_CHECK);
 
-// 設置響應頭為JSON格式
-header('Content-Type: application/json');
-// 將數據數組編碼為JSON格式並輸出
-echo json_encode($data);
-
-// 關閉數據庫連接
-mysqli_close($conn);
 ?>
