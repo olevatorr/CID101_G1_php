@@ -1,6 +1,5 @@
 <?php
-//以用來提供憑證，以便用戶代理與伺服器進行身份驗證
-// header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
 
 try {
     require_once("config.php"); // 引入資料庫配置文件
@@ -11,8 +10,9 @@ try {
     // 檢查是否存在必要的 POST 數據
     if (isset($data["K_TITLE"]) && isset($data["K_CONTENT"]) && isset($data["K_FROM"]) && isset($data["K_URL"]) && isset($data["K_DATE"])) {
         // 準備 SQL 語句，將知識數據插入到數據庫中
-        $sql = "INSERT INTO knowledge (K_TITLE, K_CONTENT, K_FROM, K_URL, K_DATE) 
+        $sql = "INSERT INTO KNOWLEDGE (K_TITLE, K_CONTENT, K_FROM, K_URL, K_DATE) 
                 VALUES (:K_TITLE, :K_CONTENT, :K_FROM, :K_URL, :K_DATE)";
+
         $knowledgeStmt = $pdo->prepare($sql); // 準備 SQL 語句
         $knowledgeStmt->bindValue(":K_TITLE", $data["K_TITLE"]); // 綁定 K_TITLE 參數
         $knowledgeStmt->bindValue(":K_CONTENT", $data["K_CONTENT"]); // 綁定 K_CONTENT 參數

@@ -6,7 +6,7 @@ try {
     require_once("config.php");
 
     // 定義 SQL 刪除語句，用於刪除 `knowledge` 表中指定 `K_ID` 的記錄
-    $sql = "delete from knowledge where K_ID = ?";
+    $sql = "delete from KNOWLEDGE where K_ID = ?";
 
     // 使用 PDO 對象準備 SQL 語句
     $knowledge = $pdo->prepare($sql);
