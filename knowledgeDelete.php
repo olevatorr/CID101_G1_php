@@ -1,6 +1,12 @@
 <?php
 header('Content-Type: application/json');
 
+// 確保 K_ID 參數存在
+if (!isset($_GET["K_ID"])) {
+    http_response_code(400); // Bad Request
+    echo json_encode(["error" => true, "msg" => "缺少 K_ID 參數"]);
+    exit;
+}
 // 定義上傳目錄的相對路徑
 $uploadRelativeDir = '/cid101/g1/upload/img/knowledge/';
 
