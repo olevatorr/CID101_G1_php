@@ -1,6 +1,6 @@
 <?php
 //以用來提供憑證，以便用戶代理與伺服器進行身份驗證
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+// header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 try {
     require_once("config.php"); // 引入資料庫配置文件
