@@ -1,38 +1,28 @@
 <?php
-// 允許所有來源訪問這個API，設置CORS頭
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
 
-// 連接到MySQL數據庫
-$conn = mysqli_connect("localhost", "root", "", "g1");
-
-// 檢查數據庫連接是否成功
-if ($conn->connect_error) {
-    die("連接失敗: " . $conn->connect_error);
+// 如果是 OPTIONS 請求，返回 HTTP 狀態碼 204 並退出腳本
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
 }
 
-// 設置數據庫字符集為UTF-8
-mysqli_set_charset($conn, "utf8");
+try {
+    require_once("config.php"); // 引入資料庫配置文件
 
-// 從knowledge表中選擇所有數據
-$sql = "SELECT * FROM knowledge";
-$result = mysqli_query($conn, $sql);
+    $sql = "select * from knowledge"; // 準備 SQL 查詢語句，從資料庫中選擇所有知識數據
+    $knowledge = $pdo->query($sql); // 執行 SQL 查詢
+    $prodRows = $knowledge->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
+    
+    $countSql = "SELECT COUNT(*) AS count FROM knowledge";
+    $countResult = $pdo->query($countSql);
+    $countRow = $countResult->fetch(PDO::FETCH_ASSOC);
+    $knowledgeCount = $countRow['count'];
 
-// 初始化一個空數組來存儲數據
-$data = array();
-if (mysqli_num_rows($result) > 0) {
-    // 遍歷結果集並將每一行添加到數組中
-    while ($row = mysqli_fetch_assoc($result)) {
-        $data[] = $row;
-    }
+    $result = ["error" => false, "msg" => "", "knowledge" => $prodRows, "knowledgeCount" => $knowledgeCount]; // 準備成功的 JSON 響應數據
+} catch (PDOException $e) {
+    $result = ["error" => true, "msg" => $e->getMessage()]; // 捕獲 PDO 異常，並準備錯誤的 JSON 響應數據
 }
 
-// 設置響應頭為JSON格式
-header('Content-Type: application/json');
-// 將數據數組編碼為JSON格式並輸出
-echo json_encode($data);
+echo json_encode($result, JSON_NUMERIC_CHECK); // 將 PHP 數組轉換為 JSON 格式並輸出
 
-// 關閉數據庫連接
-mysqli_close($conn);
 ?>
