@@ -4,7 +4,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 try {
     require_once("config.php");
-    $sql = "UPDATE knowledge SET K_TITLE = :K_TITLE, K_CONTENT = :K_CONTENT, K_FROM = :K_FROM, K_URL = :K_URL, K_DATE = :K_DATE WHERE K_ID = :K_ID";
+    $sql = "UPDATE KNOWLEDGE SET K_TITLE = :K_TITLE, K_CONTENT = :K_CONTENT, K_FROM = :K_FROM, K_URL = :K_URL, K_DATE = :K_DATE WHERE K_ID = :K_ID";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(":K_TITLE", $data["K_TITLE"]);
     $stmt->bindValue(":K_CONTENT", $data["K_CONTENT"]);
