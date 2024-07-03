@@ -1,7 +1,7 @@
 <?php
 //--------------------開發階段
 $allowed_origins = [
-    "http://localhost:5173",
+    "http://localhost:5173",//前台或後台網址
     "http://localhost:5174",
     
 ];
@@ -11,7 +11,7 @@ if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed
 }
 
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");//身分授權
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
