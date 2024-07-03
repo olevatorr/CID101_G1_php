@@ -10,15 +10,10 @@ try {
     require_once("config.php"); // 引入資料庫配置文件
 
     $sql = "select * from knowledge"; // 準備 SQL 查詢語句，從資料庫中選擇所有知識數據
-    $knowledge = $pdo->query($sql); // 執行 SQL 查詢
+    $knowledge = $pdo->query($sql); // 執行 SQL 查詢調用pdo裡的函式
     $prodRows = $knowledge->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
-    
-    $countSql = "SELECT COUNT(*) AS count FROM knowledge";
-    $countResult = $pdo->query($countSql);
-    $countRow = $countResult->fetch(PDO::FETCH_ASSOC);
-    $knowledgeCount = $countRow['count'];
 
-    $result = ["error" => false, "msg" => "", "knowledge" => $prodRows, "knowledgeCount" => $knowledgeCount]; // 準備成功的 JSON 響應數據
+    $result = ["error" => false, "msg" => "", "knowledge" => $prodRows]; // 準備成功的 JSON 響應數據
 } catch (PDOException $e) {
     $result = ["error" => true, "msg" => $e->getMessage()]; // 捕獲 PDO 異常，並準備錯誤的 JSON 響應數據
 }
