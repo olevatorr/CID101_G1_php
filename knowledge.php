@@ -1,10 +1,10 @@
 <?php
 
 // 如果是 OPTIONS 請求，返回 HTTP 狀態碼 204 並退出腳本
-// if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-//     http_response_code(204);
-//     exit;
-// }
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
 
 try {
     require_once("config.php"); // 引入資料庫配置文件
