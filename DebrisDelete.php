@@ -22,13 +22,13 @@ try {
     $debris_data_list->execute();
     $affectedCount2 = $debris_data_list->rowCount();
 
-    // 提交事務
+    // 提交
     $pdo->commit();
 
     // 創建結果數組，包含操作是否成功的標誌和影響的行數
     $result = ["error" => false, "msg" => "成功的影響{$affectedCount1}筆 debris_data 和 {$affectedCount2}筆 debris_data_list"];
 } catch (PDOException $e) {
-    // 如果發生例外，回滾事務
+    // 如果發生例外
     $pdo->rollBack();
     // 創建結果數組，包含錯誤標誌和錯誤信息
     $result = ["error" => true, "msg" => $e->getMessage()];
