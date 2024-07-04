@@ -1,16 +1,9 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// 開啟錯誤日誌
-ini_set('log_errors', 1);
-ini_set('error_log', '/path/to/error.log'); // 請替換為實際的日誌路徑
-
 header('Content-Type: application/json');
 
 // 定義上傳目錄的相對路徑
-$uploadRelativeDir = '/cid101/g1/upload/json/knowledge/';
+$uploadRelativeDir = '/cid101/g1/upload/';
+
 // 獲取當前腳本所在的目錄
 $currentDir = dirname(__FILE__);
 // 構建絕對路徑
