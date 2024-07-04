@@ -9,16 +9,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     require_once("config.php"); // 引入資料庫配置文件
 
-    $sql = "SELECT * FROM NEWS"; // 準備 SQL 查詢語句，從資料庫中選擇所有知識數據
-    $news = $pdo->query($sql); // 執行 SQL 查詢，用pdo物件的query方法，使用sql這個
-    $prodRows = $news->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
-    
+    // 檢查是否有傳遞 NS_ID 參數，如果有則準備 SQL 查詢語句，帶入分類條件
+    if (isset($_GET['NS_ID'])) {
+        $NS_ID = $_GET['NS_ID'];
+        $sql = "SELECT * FROM NEWS WHERE NS_ID = :NS_ID";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':NS_ID', $NS_ID, PDO::PARAM_INT);
+        $stmt->execute();
+        $news = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        // 如果沒有 NS_ID 參數，則返回所有資料
+        $sql = "SELECT * FROM NEWS";
+        $stmt = $pdo->query($sql);
+        $news = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 獲取新聞總數
     $countSql = "SELECT COUNT(*) AS count FROM NEWS";
     $countResult = $pdo->query($countSql);
     $countRow = $countResult->fetch(PDO::FETCH_ASSOC);
     $newsCount = $countRow['count'];
 
-    $result = ["error" => false, "msg" => "", "news" => $prodRows, "newsCount" => $newsCount]; // 準備成功的 JSON 響應數據
+    $result = ["error" => false, "msg" => "", "news" => $news, "newsCount" => $newsCount]; // 準備成功的 JSON 響應數據
 } catch (PDOException $e) {
     $result = ["error" => true, "msg" => $e->getMessage()]; // 捕獲 PDO 異常，並準備錯誤的 JSON 響應數據
 }
