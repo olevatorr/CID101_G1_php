@@ -3,6 +3,7 @@
 $allowed_origins = [
     "http://localhost:5173",//前台或後台網址
     "http://localhost:5174",
+    "http://localhost:5175",
 ];
 
 if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {

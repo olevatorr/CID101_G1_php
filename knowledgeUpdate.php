@@ -10,7 +10,7 @@ $currentDir = dirname(__FILE__);
 // 構建絕對路徑
 $uploadDir = realpath($currentDir . '/../../..') . $uploadRelativeDir;
 
-try {
+try { 
     require_once("config.php");
 
     // 開始事務
