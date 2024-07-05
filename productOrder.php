@@ -13,12 +13,8 @@ try {
     $productOrder = $pdo->query($sql); // 執行 SQL 查詢
     $prodRows = $productOrder->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
     
-    $countSql = "SELECT COUNT(*) AS count FROM product_Order";
-    $countResult = $pdo->query($countSql);
-    $countRow = $countResult->fetch(PDO::FETCH_ASSOC);
-    $productOrderCount = $countRow['count'];
 
-    $result = ["error" => false, "msg" => "", "productOrder" => $prodRows, "productOrderCount" => $productOrderCount]; // 準備成功的 JSON 響應數據
+    $result = ["error" => false, "msg" => "", "productOrder" => $prodRows]; // 準備成功的 JSON 響應數據
 } catch (PDOException $e) {
     $result = ["error" => true, "msg" => $e->getMessage()]; // 捕獲 PDO 異常，並準備錯誤的 JSON 響應數據
 }
