@@ -5,8 +5,8 @@ use Ecpay\Sdk\Factories\Factory;
 use Ecpay\Sdk\Exceptions\RtnException;
 
 $factory = new Factory([
-    'hashKey' => '5294y06JbISpM5x9',
-    'hashIv' => 'v77hoKGq4kWxNNIS',
+    'hashKey' => 'pwFHCqoQZGmho4w6',
+    'hashIv' => 'EkRm7iFT261dpevs',
 ]);
 
 $checkoutResponse = $factory->create('CheckoutResponse');

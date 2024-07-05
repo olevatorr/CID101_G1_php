@@ -12,13 +12,13 @@ $itemQuantity = $_POST['itemQuantity'];
 $totalAmount = $itemPrice * $itemQuantity;
 
 $factory = new Factory([
-    'hashKey' => '5294y06JbISpM5x9',
-    'hashIv' => 'v77hoKGq4kWxNNIS',
+    'hashKey' => 'pwFHCqoQZGmho4w6',
+    'hashIv' => 'EkRm7iFT261dpevs',
 ]);
 $autoSubmitFormService = $factory->create('AutoSubmitFormWithCmvService');
 
 $input = [
-    'MerchantID' => '2000132',
+    'MerchantID' => '3002607',
     'MerchantTradeNo' => 'Test' . time(),
     'MerchantTradeDate' => date('Y/m/d H:i:s'),
     'PaymentType' => 'aio',
@@ -30,7 +30,7 @@ $input = [
 
     // 請參考 example/Payment/GetCheckoutResponse.php 範例開發
     //'ReturnURL' => 'https://您的網域/ecpay_callback.php', 修改這個才能看到回饋
-    'ReturnURL' => 'https://www.ecpay.com.tw/example/receive',
+    'ReturnURL' => 'https://tibamef2e.com/cid101/g1/api/return.php',
 ];
 $action = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
 
