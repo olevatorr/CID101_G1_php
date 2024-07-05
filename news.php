@@ -9,20 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     require_once("config.php"); // 引入資料庫配置文件
 
-    // 檢查是否有傳遞 NS_ID 參數
+    // 檢查是否有傳遞 NS_ID 參數，如果有則準備 SQL 查詢語句，帶入分類條件
     if (isset($_GET['NS_ID'])) {
         $NS_ID = $_GET['NS_ID'];
-        if ($NS_ID == 1) {
-            // 如果 NS_ID 為 1（全部分類），返回所有數據
-            $sql = "SELECT * FROM NEWS";
-            $stmt = $pdo->query($sql);
-        } else {
-            // 如果 NS_ID 不為 1，則根據 NS_ID 返回相應的數據
-            $sql = "SELECT * FROM NEWS WHERE NS_ID = :NS_ID";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':NS_ID', $NS_ID, PDO::PARAM_INT);
-            $stmt->execute();
-        }
+        $sql = "SELECT * FROM NEWS WHERE NS_ID = :NS_ID";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':NS_ID', $NS_ID, PDO::PARAM_INT);
+        $stmt->execute();
         $news = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
         // 如果沒有 NS_ID 參數，則返回所有資料
