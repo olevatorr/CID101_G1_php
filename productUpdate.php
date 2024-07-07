@@ -32,11 +32,16 @@ try {
     $stmt->bindValue(":P_ID", $_POST["P_ID"]);
 
     // 處理文件上傳
-    $imageFields = ["P_MAIN_IMG", "P_IMG1", "P_IMG2"];
-    foreach ($imageFields as $index => $field) {
-        if (isset($_FILES[$field]) && $_FILES[$field]["error"] === UPLOAD_ERR_OK) {
+    $images = [
+        'P_MAIN_IMG' => 'newMainImage',
+        'P_IMG1' => 'newImg1',
+        'P_IMG2' => 'newImg2'
+    ];
+
+    foreach ($images as $dbField => $fileField) {
+        if (isset($_FILES[$fileField]) && $_FILES[$fileField]["error"] === UPLOAD_ERR_OK) {
             // 獲取舊文件名
-            $oldFileQuery = $pdo->prepare("SELECT $field FROM product WHERE P_ID = :P_ID");
+            $oldFileQuery = $pdo->prepare("SELECT $dbField FROM product WHERE P_ID = :P_ID");
             $oldFileQuery->execute([':P_ID' => $_POST["P_ID"]]);
             $oldFileName = $oldFileQuery->fetchColumn();
 
@@ -46,19 +51,19 @@ try {
             }
 
             // 處理新文件
-            $fileInfo = pathinfo($_FILES[$field]['name']);
+            $fileInfo = pathinfo($_FILES[$fileField]['name']);
             $extension = $fileInfo['extension'];
-            $newFileName = $_POST["P_ID"] . "_$field." . $extension;
+            $newFileName = $_POST["P_ID"] . "_" . strtolower($dbField) . "." . $extension;
 
             // 移動新文件
-            if (move_uploaded_file($_FILES[$field]['tmp_name'], $uploadDir . $newFileName)) {
-                $stmt->bindValue(":$field", $newFileName);
+            if (move_uploaded_file($_FILES[$fileField]['tmp_name'], $uploadDir . $newFileName)) {
+                $stmt->bindValue(":$dbField", $newFileName);
             } else {
-                throw new Exception("圖片 $field 上傳失敗");
+                throw new Exception("$dbField 上傳失敗");
             }
         } else {
             // 如果沒有新文件，保留原來的文件名
-            $stmt->bindValue(":$field", $_POST[$field]);
+            $stmt->bindValue(":$dbField", $_POST[$dbField]);
         }
     }
 
