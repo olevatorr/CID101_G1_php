@@ -10,62 +10,24 @@ header('Content-Type: application/json');
 require_once("config.php");
 
 // 定義上傳目錄的相對路徑
-$uploadRelativeDir = '/cid101/g1/upload/img/events/';
+// $uploadRelativeDir = '/cid101/g1/upload/img/events/';
 
-// 獲取當前腳本所在的目錄
-$currentDir = dirname(__FILE__);
-
-// 構建絕對路徑
-$uploadDir = realpath($currentDir . '/../../..') . $uploadRelativeDir;
-
-// 確保上傳目錄存在
-if (!file_exists($uploadDir)) {
-    if (!mkdir($uploadDir, 0777, true)) {
-        die(json_encode(['error' => true, 'msg' => '無法創建上傳目錄']));
-    }
-}
-
-// 檢查目錄是否可寫
-if (!is_writable($uploadDir)) {
-    die(json_encode(['error' => true, 'msg' => '目錄不可寫']));
-}
 
 try {
     // 開始事務
     $pdo->beginTransaction();
 
     // 準備 SQL 語句，將知識數據插入到數據庫中
-    $sql = "INSERT INTO events (E_DATE, E_DEADLINE, E_ADDRESS, E_TITLE, E_STATUS) 
-                VALUES (:E_DATE, :E_DEADLINE, :E_ADDRESS, :E_TITLE, :E_STATUS)";
+    $sql = "INSERT INTO EVENT_ORDER (E_ID, U_ID, EO_attend) 
+                VALUES (:E_ID, :U_ID, :EO_attend)";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(":E_DATE", $_POST["E_DATE"]); // 綁定 E_DATE 參數
-    $stmt->bindParam(":E_DEADLINE", $_POST["E_DEADLINE"]); // 綁定 E_DEADLINE 參數
-    $stmt->bindParam(":E_ADDRESS", $_POST["E_ADDRESS"]); // 綁定 E_ADDRESS 參數
-    $stmt->bindParam(":E_TITLE", $_POST["E_TITLE"]); // 綁定 E_TITLE 參數
-    $stmt->bindParam(":E_STATUS", $_POST["E_STATUS"]); // 綁定 E_STATUS 參數
+    $stmt->bindParam(":E_ID", $_POST["E_ID"]); // 綁定 E_ID 參數
+    $stmt->bindParam(":U_ID", $_POST["U_ID"]); // 綁定 U_ID 參數
+    $stmt->bindParam(":EO_attend", $_POST["EO_attend"]); // 綁定 EO_attend 參數
     $stmt->execute();
 
     $E_ID = $pdo->lastInsertId();
-
-    // 處理文件上傳
-    if (isset($_FILES['E_IMG']) && $_FILES['E_IMG']['error'] === UPLOAD_ERR_OK) {
-        $fileInfo = pathinfo($_FILES['E_IMG']['name']);
-        $ext = $fileInfo['extension'];
-        $newFilename = $E_ID . '.' . $ext;
-
-        // 移動上傳的文件
-        if (!move_uploaded_file($_FILES['E_IMG']['tmp_name'], $uploadDir . $newFilename)) {
-            throw new Exception('文件上傳失敗');
-        }
-
-        // 更新數據庫中的文件名
-        $updateSql = "UPDATE events SET E_IMG = :E_IMG WHERE E_ID = :E_ID";
-        $updateStmt = $pdo->prepare($updateSql);
-        $updateStmt->bindParam(':E_IMG', $newFilename);
-        $updateStmt->bindParam(':E_ID', $E_ID);
-        $updateStmt->execute();
-    }
 
     // 提交事務
     $pdo->commit();
