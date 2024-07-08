@@ -9,7 +9,7 @@ try {
     $sql = "SELECT * FROM EXPENDITURE_LIST";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-    $donateOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $EXPENDITURE_LIST = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode($EXPENDITURE_LIST);
 } catch (Exception $e) {
