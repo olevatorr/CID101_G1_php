@@ -57,7 +57,14 @@ try {
         if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
             $fileInfo = pathinfo($_FILES[$field]['name']);
             $ext = $fileInfo['extension'];
-            $newFilename = $P_ID . '_' . $field . '.' . $ext;
+            $newFilename;
+            if($field === 'P_MAIN_IMG'){
+                $newFilename = $P_ID  . '-1.' . $ext;
+            } elseif ($field === 'P_IMG1') {
+                $newFilename = $P_ID  . '-2.' . $ext;
+            } else {
+                $newFilename = $P_ID  . '-3.' . $ext;
+            }
 
             // 移動上傳的文件
             if (!move_uploaded_file($_FILES[$field]['tmp_name'], $uploadDir . $newFilename)) {
