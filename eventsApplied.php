@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     require_once("config.php"); // 引入資料庫配置文件
 
-    $sql = "select * from EVENTS"; // 準備 SQL 查詢語句，從資料庫中選擇所有活動列表，包含已報名及未報名
+    $sql = "select * from EVENT_ORDER a JOIN EVENTS b ON a.E_ID = b.E_ID JOIN USER u on a.U_ID = u.U_ID"; // 準備 SQL 查詢語句，從資料庫中選擇所有活動列表，包含已報名及未報名
     $events = $pdo->query($sql); // 執行 SQL 查詢
     $prodRows = $events->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
     
