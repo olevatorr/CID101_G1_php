@@ -42,7 +42,9 @@ try {
         }
     } else {
         // 如果沒有新文件，保留原來的文件名
-        $newFileName = $_POST["U_AVATAR"];
+        $oldFileQuery = $pdo->prepare("SELECT U_AVATAR FROM USER WHERE U_ID = :U_ID");
+        $oldFileQuery->execute([':U_ID' => $_POST["U_ID"]]);
+        $newFileName = $oldFileQuery->fetchColumn();
         $stmt->bindValue(":imageSrc", $newFileName);
     }
 

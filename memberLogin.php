@@ -24,11 +24,15 @@ try {
     // 獲取查詢結果
     $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // 檢查用戶是否存在並驗證密碼
+    // 檢查用戶是否存在並檢查狀態
     if ($userRow) {
-        echo json_encode(['error' => false, 'msg' => '登錄成功', 'user' => $userRow]);
+        if ($userRow['U_STATUS'] == 0) {
+            echo json_encode(['error' => true, 'msg' => '用戶帳號已被停權']);
+        } else {
+            echo json_encode(['error' => false, 'msg' => '用戶帳號正常', 'user' => $userRow]);
+        }
     } else {
-        echo json_encode(['error' => true, 'msg' => '用戶名或密碼錯誤']);
+        echo json_encode(['error' => true, 'msg' => '用戶名不存在']);
     }
 } catch (PDOException $e) {
     echo json_encode(['error' => true, 'msg' => '數據庫錯誤: ' . $e->getMessage()]);

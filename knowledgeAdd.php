@@ -34,6 +34,7 @@ try {
     // 開始事務
     $pdo->beginTransaction();
 
+    $today = date('Y-m-d');
     // 準備 SQL 語句，將知識數據插入到數據庫中
     $sql = "INSERT INTO KNOWLEDGE (K_TITLE, K_CONTENT, K_FROM, K_DATE) 
             VALUES (:K_TITLE, :K_CONTENT, :K_FROM, :K_DATE)";
@@ -42,7 +43,7 @@ try {
     $stmt->bindParam(':K_TITLE', $_POST['K_TITLE']);
     $stmt->bindParam(':K_CONTENT', $_POST['K_CONTENT']);
     $stmt->bindParam(':K_FROM', $_POST['K_FROM']);
-    $stmt->bindParam(':K_DATE', $_POST['K_DATE']);
+    $stmt->bindParam(':K_DATE', $today); 
     $stmt->execute();
 
     $K_ID = $pdo->lastInsertId();
