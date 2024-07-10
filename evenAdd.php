@@ -10,7 +10,7 @@ header('Content-Type: application/json');
 require_once("config.php");
 
 // 定義上傳目錄的相對路徑
-$uploadRelativeDir = '/cid101/g1/upload/img/events/';
+$uploadRelativeDir = '/cid101/g1/upload/img/EVENTS/';
 
 // 獲取當前腳本所在的目錄
 $currentDir = dirname(__FILE__);
@@ -35,7 +35,7 @@ try {
     $pdo->beginTransaction();
 
     // 準備 SQL 語句，將知識數據插入到數據庫中
-    $sql = "INSERT INTO events (E_DATE, E_DEADLINE, E_ADDRESS, E_TITLE, E_STATUS) 
+    $sql = "INSERT INTO EVENTS (E_DATE, E_DEADLINE, E_ADDRESS, E_TITLE, E_STATUS) 
                 VALUES (:E_DATE, :E_DEADLINE, :E_ADDRESS, :E_TITLE, :E_STATUS)";
 
     $stmt = $pdo->prepare($sql);
@@ -60,7 +60,7 @@ try {
         }
 
         // 更新數據庫中的文件名
-        $updateSql = "UPDATE events SET E_IMG = :E_IMG WHERE E_ID = :E_ID";
+        $updateSql = "UPDATE EVENTS SET E_IMG = :E_IMG WHERE E_ID = :E_ID";
         $updateStmt = $pdo->prepare($updateSql);
         $updateStmt->bindParam(':E_IMG', $newFilename);
         $updateStmt->bindParam(':E_ID', $E_ID);
