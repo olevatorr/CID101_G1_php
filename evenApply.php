@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     require_once("config.php"); // 引入資料庫配置文件
 
-    $sql = "select * from EVENT_ORDER"; // 準備 SQL 查詢語句，從資料庫中選擇所有知識數據
+    $sql = "select * from EVENT_ORDER "; // 準備 SQL 查詢語句，從資料庫中選擇所有知識數據
     $event_order = $pdo->query($sql); // 執行 SQL 查詢
     $prodRows = $event_order->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
     
