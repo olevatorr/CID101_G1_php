@@ -9,9 +9,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     require_once("config.php"); // 引入資料庫配置文件
 
+<<<<<<< HEAD
+    $sql = "select * from EVENT_ORDER "; // 準備 SQL 查詢語句，從資料庫中選擇所有知識數據
+    $event_order = $pdo->query($sql); // 執行 SQL 查詢
+    $prodRows = $event_order->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
+=======
     $sql = "select * from EVENT_ORDER"; // 準備 SQL 查詢語句，從資料庫中選擇所有知識數據
     $EVENT_ORDER = $pdo->query($sql); // 執行 SQL 查詢
     $prodRows = $EVENT_ORDER->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
+>>>>>>> 14df8d85da9e6a123e17dc6d9fe45bca9e5205b8
     
     $countSql = "SELECT COUNT(*) AS count FROM EVENT_ORDER";
     $countResult = $pdo->query($countSql);
