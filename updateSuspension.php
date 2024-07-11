@@ -3,52 +3,20 @@ header('Content-Type: application/json');
 
 require_once("config.php");
 
-function respond($statusCode, $message) {
-    http_response_code($statusCode);
-    echo json_encode(["error" => $statusCode >= 400, "message" => $message]);
-    exit;
-}
-
 try {
-    $data = json_decode(file_get_contents('php://input'));
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        respond(400, "無效的 JSON 數據");
-    }
-
-    if (!isset($data['U_ID'], $data['U_STATUS'])) {
-        respond(400, "數據不完整");
-    }
-
-    $id = (int)$data['U_ID'];
-    $status = (int)$data['U_STATUS'];
-
-    if ($status !== 0 && $status !== 1) {
-        respond(400, "無效的狀態值");
-    }
+    $data = json_decode(file_get_contents('php://input'), true);
 
     $pdo->beginTransaction();
-    $sql = "UPDATE USER SET U_STATUS = :status WHERE U_ID = :id";
+    $sql = "UPDATE USER SET U_STATUS = :U_STATUS WHERE U_ID = :U_ID";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':status', $status, PDO::PARAM_INT);
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->bindValue(':U_STATUS', $data['U_STATUS']);
+    $stmt->bindValue(':U_ID', $data['U_ID']);
+    $stmt->execute();
+    $user = $data;
 
-    if ($stmt->execute()) {
-        $pdo->commit();
-        respond(200, "停權狀態已更新");
-    } else {
-        $pdo->rollBack();
-        respond(500, "無法更新停權狀態");
-    }
+    echo json_encode(["error" => false, "msg" => "新增管理員成功", "user" => $user]);
 } catch (PDOException $e) {
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
-    }
-    respond(500, "數據庫錯誤: " . $e->getMessage());
-} catch (Exception $e) {
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
-    }
-    respond(500, $e->getMessage());
+    $result = ["error" => true, "msg" => $e->getMessage()];
+    echo json_encode($result);
 }
 ?>

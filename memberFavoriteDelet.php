@@ -13,7 +13,7 @@ try {
 
         if ($userId > 0 && $productId > 0) {
             // 執行 SQL 語句刪除指定會員對應的收藏商品
-            $sql = "DELETE FROM product_collection WHERE U_ID = :userId AND P_ID = :productId";
+            $sql = "DELETE FROM PRODUCT_COLLECTION WHERE U_ID = :userId AND P_ID = :productId";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
             $stmt->bindParam(':productId', $productId, PDO::PARAM_INT);
