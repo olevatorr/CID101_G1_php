@@ -75,7 +75,8 @@ try {
 
     $form = $autoSubmitFormService->generate($input, $action);
     
-    echo json_encode(['form' => $form]);
+    // Instead of echoing the form directly, we'll send it as JSON
+    echo json_encode(['form' => $form, 'action' => $action]);
 } catch (Exception $e) {
     http_response_code(500);
     error_log('ECPay Payment Error: ' . $e->getMessage());
