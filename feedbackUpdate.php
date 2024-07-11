@@ -7,17 +7,17 @@ try {
     // 获取并解析 POST 数据
     $input = json_decode(file_get_contents("php://input"), true);
 
-    if (!isset($input["F_Status"]) || !isset($input["F_ID"])) {
-        throw new Exception("Missing F_Status or F_ID");
+    if (!isset($input["F_STATUS"]) || !isset($input["F_ID"])) {
+        throw new Exception("Missing F_STATUS or F_ID");
     }
 
     // 开始事务
     $pdo->beginTransaction();
 
     // 准备更新语句
-    $sql = "UPDATE FEEDBACK SET F_Status = :F_Status WHERE F_ID = :F_ID";
+    $sql = "UPDATE FEEDBACK SET F_STATUS = :F_STATUS WHERE F_ID = :F_ID";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(":F_Status", $input["F_Status"]);
+    $stmt->bindValue(":F_STATUS", $input["F_STATUS"]);
     $stmt->bindValue(":F_ID", $input["F_ID"]);
 
     // 执行更新
