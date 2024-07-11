@@ -7,8 +7,8 @@ try {
     // 获取并解析 POST 数据
     $input = json_decode(file_get_contents("php://input"), true);
 
-    if (!isset($input["F_STATUS"]) || !isset($input["F_ID"])) {
-        throw new Exception("Missing F_STATUS or F_ID");
+    if (!isset($input["ER_ID"]) || !isset($input["F_ID"])) {
+        throw new Exception("Missing ER_ID or F_ID");
     }
 
     // 开始事务
@@ -20,8 +20,14 @@ try {
     $stmt->bindValue(":F_STATUS", $input["F_STATUS"]);
     $stmt->bindValue(":F_ID", $input["F_ID"]);
 
-    // 执行更新
     $stmt->execute();
+    $sql2 = "UPDATE EVENT_REPORTS SET ES_STATUS = :ES_STATUS WHERE ER_ID = :ER_ID";
+    $stmt2 = $pdo->prepare($sql2);
+    $stmt2->bindValue(":ES_STATUS", $input["ES_STATUS"]);
+    $stmt2->bindValue(":ER_ID", $input["ER_ID"]);
+
+    // 执行更新
+    $stmt2->execute();
 
     // 提交事务
     $pdo->commit();

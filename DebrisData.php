@@ -12,8 +12,8 @@ header('Content-Type: application/json');
 require_once("config.php");
 
 try {
-    // 準備 SQL 查詢語句
-    $sql = "SELECT * FROM DEBRIS_DATA";
+    // 準備 SQL 查詢語句，按月份排序
+    $sql = "SELECT * FROM DEBRIS_DATA ORDER BY DATE_FORMAT(DDL_DATE, '%Y-%m')";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     
