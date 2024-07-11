@@ -15,14 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }	
 //---
-$dbname = "bluealert";
-$user = "root";
-$password = "";
+// $dbname = "bluealert";
+// $user = "root";
+// $password = "";
 
 //--------------------prod階段
-// $dbname = "tibamefe_cid101g1";
-// $user = "tibamefe_since2021";
-// $password = "vwRBSb.j&K#E";
+$dbname = "tibamefe_cid101g1";
+$user = "tibamefe_since2021";
+$password = "vwRBSb.j&K#E";
 
 $dsn = "mysql:host=localhost;port=3306;dbname=$dbname;charset=utf8";
 
