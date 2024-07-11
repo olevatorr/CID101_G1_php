@@ -9,14 +9,14 @@ try {
     $pdo->beginTransaction();
 
     // 定義 SQL 刪除語句，用於刪除 `debris_data` 表中指定 `DDL_ID` 的記錄
-    $sql1 = "DELETE FROM debris_data WHERE DDL_ID = ?";
+    $sql1 = "DELETE FROM DEBRIS_DATA WHERE DDL_ID = ?";
     $debris_data = $pdo->prepare($sql1);
     $debris_data->bindValue(1, $_GET["DDL_ID"]);
     $debris_data->execute();
     $affectedCount1 = $debris_data->rowCount();
 
     // 定義 SQL 刪除語句，用於刪除 `debris_data_list` 表中指定 `DDL_ID` 的記錄
-    $sql2 = "DELETE FROM debris_data_list WHERE DDL_ID = ?";
+    $sql2 = "DELETE FROM DEBRIS_DATA_LIST WHERE DDL_ID = ?";
     $debris_data_list = $pdo->prepare($sql2);
     $debris_data_list->bindValue(1, $_GET["DDL_ID"]);
     $debris_data_list->execute();
