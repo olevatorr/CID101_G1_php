@@ -16,13 +16,37 @@ try {
         throw new Exception('會員ID未提供');
     }
 
-    // 準備 SQL 查詢語句，根據會員ID選擇產品訂單
-    $sql = "SELECT * FROM PRODUCT_ORDER WHERE U_ID = :u_id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['u_id' => $u_id]);
-    $prodRows = $stmt->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
+    // 查詢訂單
+    $orderSql = "
+        SELECT PO_ID, U_ID, PO_NAME, PO_PHONE, PO_AMOUNT, PO_ADDR, 
+        PM_ID, PO_DATE, S_STATUS, PO_TRANS
+        FROM PRODUCT_ORDER
+        WHERE U_ID = :u_id
+    ";
+    $orderStmt = $pdo->prepare($orderSql);
+    $orderStmt->execute(['u_id' => $u_id]);
+    $orders = $orderStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $result = ["error" => false, "msg" => "", "productOrder" => $prodRows]; // 準備成功的 JSON 響應數據
+    // 查詢訂單明細
+    $detailsSql = "
+        SELECT PO_ID, P_ID, P_NAME, P_PRICE, PO_QTY
+        FROM product_order_details
+        WHERE PO_ID IN (SELECT PO_ID FROM PRODUCT_ORDER WHERE U_ID = :u_id)
+    ";
+    $detailsStmt = $pdo->prepare($detailsSql);
+    $detailsStmt->execute(['u_id' => $u_id]);
+    $details = $detailsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // 將訂單和訂單明細組合在一起
+    $ordersWithDetails = [];
+    foreach ($orders as $order) {
+        $order['details'] = array_filter($details, function ($detail) use ($order) {
+            return $detail['PO_ID'] === $order['PO_ID'];
+        });
+        $ordersWithDetails[] = $order;
+    }
+
+    $result = ["error" => false, "msg" => "", "data" => $ordersWithDetails]; // 準備成功的 JSON 響應數據
 } catch (PDOException $e) {
     $result = ["error" => true, "msg" => $e->getMessage()]; // 捕獲 PDO 異常，並準備錯誤的 JSON 響應數據
 } catch (Exception $e) {

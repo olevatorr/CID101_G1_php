@@ -43,7 +43,7 @@ try {
     $result = [
         "error" => false,
         "msg" => "",
-        "event_order" => $prodRows,
+        "data" => $prodRows,
         "event_orderCount" => $event_orderCount
     ];
 } catch (PDOException $e) {
