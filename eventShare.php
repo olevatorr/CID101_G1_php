@@ -11,6 +11,7 @@ try {
     $sql = "
     SELECT 
         FEEDBACK.*, 
+        EVENTS.E_TITLE,
         EVENTS.E_ADDRESS, 
         EVENTS.E_DATE, 
         USER.U_NAME
