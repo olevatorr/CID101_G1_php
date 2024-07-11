@@ -11,10 +11,10 @@ try {
 
 
 
-    $sql = "SELECT * FROM ADMIN WHERE AD_ACCOUNT = :admin AND AD_PSW = :adPsw";
+    $sql = "SELECT * FROM ADMIN WHERE AD_ACCOUNT = :AD_ACCOUNT AND AD_PSW = :AD_PSW";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':admin', $admin_account);
-    $stmt->bindValue(':adPsw', $admin_password);
+    $stmt->bindValue(':AD_ACCOUNT', $admin_account);
+    $stmt->bindValue(':AD_PSW', $admin_password);
     $stmt->execute();
     $admin_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
