@@ -9,6 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     require_once("config.php"); // 引入資料庫配置文件
 
+    // 定義付款方式對應表
+    $paymentMethods = [
+        0 => '超商繳費',
+        1 => '銀行轉帳',
+        2 => '信用卡',
+        3 => 'Line Pay'
+    ];
+
     // 獲取會員ID
     $u_id = isset($_GET['U_ID']) ? $_GET['U_ID'] : null;
 
@@ -20,7 +28,7 @@ try {
     $orderSql = "
         SELECT PO_ID, U_ID, PO_NAME, PO_PHONE, PO_AMOUNT, PO_ADDR, 
         PM_ID, PO_DATE, S_STATUS, PO_TRANS
-        FROM PRODUCT_ORDER
+        FROM product_order
         WHERE U_ID = :u_id
     ";
     $orderStmt = $pdo->prepare($orderSql);
@@ -31,15 +39,18 @@ try {
     $detailsSql = "
         SELECT PO_ID, P_ID, P_NAME, P_PRICE, PO_QTY
         FROM product_order_details
-        WHERE PO_ID IN (SELECT PO_ID FROM PRODUCT_ORDER WHERE U_ID = :u_id)
+        WHERE PO_ID IN (SELECT PO_ID FROM product_order WHERE U_ID = :u_id)
     ";
     $detailsStmt = $pdo->prepare($detailsSql);
     $detailsStmt->execute(['u_id' => $u_id]);
     $details = $detailsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // 將訂單和訂單明細組合在一起
+    // 將訂單和訂單明細組合在一起並轉換 PM_ID
     $ordersWithDetails = [];
     foreach ($orders as $order) {
+        // 將 PM_ID 轉換為對應的付款方式文字
+        $order['PM_ID'] = $paymentMethods[$order['PM_ID']];
+
         $order['details'] = array_filter($details, function ($detail) use ($order) {
             return $detail['PO_ID'] === $order['PO_ID'];
         });
