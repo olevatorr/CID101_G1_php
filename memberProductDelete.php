@@ -25,21 +25,21 @@ try {
 
     // 刪除訂單明細
     $detailsSql = "
-        DELETE FROM product_order_details
-        WHERE PO_ID = :po_id
+        DELETE FROM PRODUCT_ORDER_DETAILS
+        WHERE PO_ID = :PO_ID
     ";
     $detailsStmt = $pdo->prepare($detailsSql);
-    if (!$detailsStmt->execute(['po_id' => $po_id])) {
+    if (!$detailsStmt->execute(['PO_ID' => $po_id])) {
         throw new PDOException('刪除訂單明細失敗: ' . implode(' ', $detailsStmt->errorInfo()));
     }
 
     // 刪除訂單
     $orderSql = "
-        DELETE FROM product_order
-        WHERE PO_ID = :po_id
+        DELETE FROM PRODUCT_ORDER
+        WHERE PO_ID = :PO_ID
     ";
     $orderStmt = $pdo->prepare($orderSql);
-    if (!$orderStmt->execute(['po_id' => $po_id])) {
+    if (!$orderStmt->execute(['PO_ID' => $po_id])) {
         throw new PDOException('刪除訂單失敗: ' . implode(' ', $orderStmt->errorInfo()));
     }
 

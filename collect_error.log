@@ -38,3 +38,15 @@
 [2024-07-11 05:06:03] U_ID: 2, P_ID: 16
 [2024-07-11 05:06:03] Existing collection count: 0
 [2024-07-11 05:06:03] Insert result: success
+[2024-07-11 21:06:52] Received input: {"U_ID":"1","P_ID":5}
+[2024-07-11 21:06:52] U_ID: 1, P_ID: 5
+[2024-07-11 21:06:52] Existing collection count: 0
+[2024-07-11 21:06:52] Insert result: success
+[2024-07-11 21:06:55] Received input: {"U_ID":"1","P_ID":6}
+[2024-07-11 21:06:55] U_ID: 1, P_ID: 6
+[2024-07-11 21:06:55] Existing collection count: 0
+[2024-07-11 21:06:55] Insert result: success
+[2024-07-11 21:06:56] Received input: {"U_ID":"1","P_ID":7}
+[2024-07-11 21:06:56] U_ID: 1, P_ID: 7
+[2024-07-11 21:06:56] Existing collection count: 0
+[2024-07-11 21:06:56] Insert result: success

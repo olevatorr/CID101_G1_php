@@ -3,10 +3,8 @@ header('Content-Type: application/json');
 
 require_once("config.php");
 
-
 try {
     $data = json_decode(file_get_contents('php://input'), true);
-
 
     $pdo->beginTransaction();
     $sql = "UPDATE USER SET U_STATUS = :U_STATUS WHERE U_ID = :U_ID";

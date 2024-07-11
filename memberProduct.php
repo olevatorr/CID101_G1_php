@@ -28,21 +28,21 @@ try {
     $orderSql = "
         SELECT PO_ID, U_ID, PO_NAME, PO_PHONE, PO_AMOUNT, PO_ADDR, 
         PM_ID, PO_DATE, S_STATUS, PO_TRANS
-        FROM product_order
-        WHERE U_ID = :u_id
+        FROM PRODUCT_ORDER
+        WHERE U_ID = :U_ID
     ";
     $orderStmt = $pdo->prepare($orderSql);
-    $orderStmt->execute(['u_id' => $u_id]);
+    $orderStmt->execute(['U_ID' => $u_id]);
     $orders = $orderStmt->fetchAll(PDO::FETCH_ASSOC);
 
     // 查詢訂單明細
     $detailsSql = "
         SELECT PO_ID, P_ID, P_NAME, P_PRICE, PO_QTY
-        FROM product_order_details
-        WHERE PO_ID IN (SELECT PO_ID FROM product_order WHERE U_ID = :u_id)
+        FROM PRODUCT_ORDER_DETAILS
+        WHERE PO_ID IN (SELECT PO_ID FROM PRODUCT_ORDER WHERE U_ID = :U_ID)
     ";
     $detailsStmt = $pdo->prepare($detailsSql);
-    $detailsStmt->execute(['u_id' => $u_id]);
+    $detailsStmt->execute(['U_ID' => $u_id]);
     $details = $detailsStmt->fetchAll(PDO::FETCH_ASSOC);
 
     // 將訂單和訂單明細組合在一起並轉換 PM_ID
