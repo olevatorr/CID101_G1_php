@@ -1,0 +1,40 @@
+[2024-07-11 05:03:45] Received input: {"U_ID":1,"P_ID":1}
+[2024-07-11 05:03:45] U_ID: 1, P_ID: 1
+[2024-07-11 05:03:45] Existing collection count: 0
+[2024-07-11 05:03:45] Insert result: success
+[2024-07-11 05:03:48] Received input: {"U_ID":1,"P_ID":2}
+[2024-07-11 05:03:48] U_ID: 1, P_ID: 2
+[2024-07-11 05:03:48] Existing collection count: 0
+[2024-07-11 05:03:48] Insert result: success
+[2024-07-11 05:03:53] Received input: {"U_ID":1,"P_ID":3}
+[2024-07-11 05:03:53] U_ID: 1, P_ID: 3
+[2024-07-11 05:03:53] Existing collection count: 0
+[2024-07-11 05:03:53] Insert result: success
+[2024-07-11 05:03:54] Received input: {"U_ID":1,"P_ID":4}
+[2024-07-11 05:03:54] U_ID: 1, P_ID: 4
+[2024-07-11 05:03:54] Existing collection count: 0
+[2024-07-11 05:03:54] Insert result: success
+[2024-07-11 05:04:07] Received input: {"U_ID":1,"P_ID":1}
+[2024-07-11 05:04:07] U_ID: 1, P_ID: 1
+[2024-07-11 05:04:07] Existing collection count: 0
+[2024-07-11 05:04:07] Insert result: success
+[2024-07-11 05:04:09] Received input: {"U_ID":1,"P_ID":2}
+[2024-07-11 05:04:09] U_ID: 1, P_ID: 2
+[2024-07-11 05:04:09] Existing collection count: 0
+[2024-07-11 05:04:09] Insert result: success
+[2024-07-11 05:05:10] Received input: {"U_ID":1,"P_ID":3}
+[2024-07-11 05:05:10] U_ID: 1, P_ID: 3
+[2024-07-11 05:05:10] Existing collection count: 0
+[2024-07-11 05:05:10] Insert result: success
+[2024-07-11 05:05:59] Received input: {"U_ID":2,"P_ID":1}
+[2024-07-11 05:05:59] U_ID: 2, P_ID: 1
+[2024-07-11 05:05:59] Existing collection count: 0
+[2024-07-11 05:05:59] Insert result: success
+[2024-07-11 05:06:01] Received input: {"U_ID":2,"P_ID":14}
+[2024-07-11 05:06:01] U_ID: 2, P_ID: 14
+[2024-07-11 05:06:01] Existing collection count: 0
+[2024-07-11 05:06:01] Insert result: success
+[2024-07-11 05:06:03] Received input: {"U_ID":2,"P_ID":16}
+[2024-07-11 05:06:03] U_ID: 2, P_ID: 16
+[2024-07-11 05:06:03] Existing collection count: 0
+[2024-07-11 05:06:03] Insert result: success
