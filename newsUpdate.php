@@ -31,6 +31,7 @@ try {
 
 
     // 處理文件上傳
+    // 檢查資料上傳成功還是失敗，檢查是否存在名為 N_IMG 的上傳檔案，並且檔案上傳是否成功。
     if (isset($_FILES['N_IMG']) && $_FILES['N_IMG']['error'] === UPLOAD_ERR_OK) {
         // 獲取舊文件名
         $oldFileQuery = $pdo->prepare("SELECT N_IMG FROM NEWS WHERE N_ID = :N_ID");

@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     parse_str($raw_post_data, $post_data);
 
     $do_amount = filter_var($post_data['DO_AMOUNT'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-    $do_date = filter_var($post_data['DO_DATE'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $u_id = filter_var($post_data['U_ID'], FILTER_SANITIZE_NUMBER_INT);
 
     // 調試信息
@@ -23,12 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     // 檢查必要參數是否存在
-    if ($do_amount && $do_date && $u_id) {
+    if ($do_amount && $u_id) {
         // 插入数据
-        $sql = "INSERT INTO DONATE_ORDER (DO_AMOUNT, DO_DATE, U_ID) VALUES (:DO_AMOUNT, :DO_DATE, :U_ID)";
+        $sql = "INSERT INTO DONATE_ORDER (DO_AMOUNT, U_ID) VALUES (:DO_AMOUNT, :U_ID)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':DO_AMOUNT', $do_amount);
-        $stmt->bindParam(':DO_DATE', $do_date);
         $stmt->bindParam(':U_ID', $u_id);
         
         if ($stmt->execute()) {
