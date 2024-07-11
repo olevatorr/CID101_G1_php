@@ -26,8 +26,13 @@ try {
     $stmt->bindParam(":U_ID", $_POST["U_ID"]); // 綁定 U_ID 參數
     $stmt->bindParam(":ER_Origin", $_POST["ER_Origin"]); // 綁定 ER_Origin 參數
     $stmt->execute();
+    
+    $sql2 = "UPDATE FEEDBACK SET F_STATUS = 1
+                WHERE F_ID = :F_ID";
 
-    $F_ID = $pdo->lastInsertId();
+    $stmt2 = $pdo->prepare($sql2);
+    $stmt2->bindParam(":F_ID", $_POST["F_ID"]); // 綁定 F_ID 參數
+    $stmt2->execute();
 
     // 提交事務
     $pdo->commit();
