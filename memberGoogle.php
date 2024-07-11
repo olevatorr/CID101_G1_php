@@ -46,12 +46,15 @@ try {
         $insertStmt->bindParam(':account', $account, PDO::PARAM_STR);
         $insertStmt->execute();
         
-        $newUser = [
-            'U_EMAIL' => $email,
-            'U_NAME' => $name,
-            'U_ACCOUNT' => $account,
-            'U_DATE' => date("Y-m-d") // Add the current date and time
-        ];
+        // Get the new user's ID
+        $newUserId = $pdo->lastInsertId();
+
+        // 獲取新用戶的詳細信息
+        $newUserSql = "SELECT * FROM USER WHERE U_ID = :id";
+        $newUserStmt = $pdo->prepare($newUserSql);
+        $newUserStmt->bindParam(':id', $newUserId, PDO::PARAM_INT);
+        $newUserStmt->execute();
+        $newUser = $newUserStmt->fetch(PDO::FETCH_ASSOC);
         
         echo json_encode(['success' => true, 'message' => '註冊成功並登入！', 'user' => $newUser]);
     }

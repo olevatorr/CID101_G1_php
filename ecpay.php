@@ -1,8 +1,10 @@
 <?php
-header('Access-Control-Allow-Headers: Content-Type');
+// Set CORS headers
+header("Access-Control-Allow-Origin: *"); // Replace * with your frontend domain in production
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
-require_once("config.php");
-
+// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -13,40 +15,40 @@ use Ecpay\Sdk\Services\UrlService;
 
 require __DIR__ . '/vendor/autoload.php';
 
-// 檢查是否為 POST 請求
+// Check if it's a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['error' => '不允許的方法']);
+    echo json_encode(['error' => 'Method Not Allowed']);
     exit();
 }
 
-// 接收 JSON 格式的 POST 數據
+// Receive JSON format POST data
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-// 驗證必要欄位
+// Validate required fields
 $required_fields = ['itemName', 'itemPrice', 'itemQuantity'];
 foreach ($required_fields as $field) {
     if (!isset($data[$field])) {
         http_response_code(400);
-        echo json_encode(['error' => "缺少必要欄位：$field"]);
+        echo json_encode(['error' => "Missing required field: $field"]);
         exit();
     }
 }
 
-// 提取並驗證數據
-$itemName = isset($data['itemName']) ? filter_var($data['itemName'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
-$itemPrice = isset($data['itemPrice']) ? filter_var($data['itemPrice'], FILTER_VALIDATE_FLOAT) : false;
-$itemQuantity = isset($data['itemQuantity']) ? filter_var($data['itemQuantity'], FILTER_VALIDATE_INT) : false;
+// Extract and validate data
+$itemName = filter_var($data['itemName'], FILTER_SANITIZE_SPECIAL_CHARS);
+$itemPrice = filter_var($data['itemPrice'], FILTER_VALIDATE_FLOAT);
+$itemQuantity = filter_var($data['itemQuantity'], FILTER_VALIDATE_INT);
 
-// 驗證價格和數量是否有效
+// Validate price and quantity
 if ($itemPrice === false || $itemQuantity === false) {
     http_response_code(400);
-    echo json_encode(['error' => '價格或數量格式不正確']);
+    echo json_encode(['error' => 'Invalid price or quantity format']);
     exit();
 }
 
-// 計算總金額
+// Calculate total amount
 $totalAmount = $itemPrice * $itemQuantity;
 
 try {
@@ -62,7 +64,7 @@ try {
         'MerchantTradeDate' => date('Y/m/d H:i:s'),
         'PaymentType' => 'aio',
         'TotalAmount' => $totalAmount,
-        'TradeDesc' => UrlService::ecpayUrlEncode('交易描述範例'),
+        'TradeDesc' => UrlService::ecpayUrlEncode('Transaction Description Example'),
         'ItemName' => "$itemName $itemPrice TWD x $itemQuantity",
         'ChoosePayment' => 'Credit',
         'EncryptType' => 1,
@@ -73,10 +75,11 @@ try {
 
     $form = $autoSubmitFormService->generate($input, $action);
     
-    echo json_encode(['form' => $form]);
+    // Instead of echoing the form directly, we'll send it as JSON
+    echo json_encode(['form' => $form, 'action' => $action]);
 } catch (Exception $e) {
     http_response_code(500);
-    error_log('綠界支付錯誤: ' . $e->getMessage());
-    echo json_encode(['error' => '處理付款時發生錯誤，請稍後再試。']);
+    error_log('ECPay Payment Error: ' . $e->getMessage());
+    echo json_encode(['error' => 'An error occurred while processing the payment. Please try again later.']);
 }
 ?>
