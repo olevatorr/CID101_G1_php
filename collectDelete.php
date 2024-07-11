@@ -1,17 +1,19 @@
 <?php
+// 設置響應頭為 JSON
 header('Content-Type: application/json');
 
-// 確保 P_ID 和 U_ID 參數存在
-if (!isset($_GET["P_ID"]) || !isset($_GET["U_ID"])) {
-    http_response_code(400); // Bad Request
-    echo json_encode(["error" => true, "msg" => "缺少 P_ID 或 U_ID 參數"]);
-    exit;
-}
+// 引入數據庫配置文件
+require_once("config.php");
 
 try {
-    // 引入資料庫連接配置文件
-    require_once("config.php");
-    
+    // 從請求中讀取 JSON 輸入數據
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    // 檢查是否存在必要的數據
+    if (!isset($data["U_ID"]) || !isset($data["P_ID"])) {
+        throw new Exception("缺少 U_ID 或 P_ID 參數");
+    }
+
     // 開始事務
     $pdo->beginTransaction();
 
@@ -22,8 +24,8 @@ try {
     $stmt = $pdo->prepare($sql);
 
     // 綁定參數
-    $stmt->bindValue(":P_ID", $_GET["P_ID"], PDO::PARAM_INT);
-    $stmt->bindValue(":U_ID", $_GET["U_ID"], PDO::PARAM_INT);
+    $stmt->bindValue(":P_ID", $data["P_ID"], PDO::PARAM_INT);
+    $stmt->bindValue(":U_ID", $data["U_ID"], PDO::PARAM_INT);
 
     // 執行 SQL 語句
     $stmt->execute();
@@ -36,7 +38,7 @@ try {
 
     // 創建結果數組
     if ($affectedCount > 0) {
-        $result = ["error" => false, "msg" => "成功取消收藏 {$affectedCount} 筆記錄"];
+        $result = ["error" => false, "msg" => "成功取消收藏"];
     } else {
         $result = ["error" => false, "msg" => "未找到匹配的收藏記錄"];
     }
@@ -44,9 +46,11 @@ try {
 } catch (PDOException $e) {
     // 如果發生例外，回滾事務
     $pdo->rollBack();
-    
-    // 創建結果數組，包含錯誤標誌和錯誤信息
     $result = ["error" => true, "msg" => "數據庫錯誤: " . $e->getMessage()];
+} catch (Exception $e) {
+    // 如果發生其他例外，回滾事務
+    $pdo->rollBack();
+    $result = ["error" => true, "msg" => $e->getMessage()];
 }
 
 // 將結果數組編碼為 JSON 格式並輸出
