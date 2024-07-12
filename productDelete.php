@@ -7,6 +7,7 @@ if (!isset($_GET["P_ID"])) {
     echo json_encode(["error" => true, "msg" => "缺少 P_ID 參數"]);
     exit;
 }
+
 // 定義上傳目錄的相對路徑
 $uploadRelativeDir = '/cid101/g1/upload/img/product/';
 
@@ -24,10 +25,10 @@ try {
     $pdo->beginTransaction();
 
     // 首先獲取要刪除的記錄的圖片文件名
-    $getImageSql = "SELECT P_MAIN_IMG FROM PRODUCT WHERE P_ID = ?";
+    $getImageSql = "SELECT P_MAIN_IMG, P_IMG1, P_IMG2 FROM PRODUCT WHERE P_ID = ?";
     $getImageStmt = $pdo->prepare($getImageSql);
     $getImageStmt->execute([$_GET["P_ID"]]);
-    $imageFileName = $getImageStmt->fetchColumn();
+    $images = $getImageStmt->fetch(PDO::FETCH_ASSOC);
 
     // 定義 SQL 刪除語句，用於刪除 `PRODUCT` 表中指定 `P_ID` 的記錄
     $deleteSql = "DELETE FROM PRODUCT WHERE P_ID = ?";
@@ -42,10 +43,14 @@ try {
     $affectedCount = $deleteStmt->rowCount();
 
     // 如果數據庫記錄刪除成功，則刪除對應的圖片文件
-    if ($affectedCount > 0 && $imageFileName) {
-        $fullImagePath = $uploadDir . $imageFileName;
-        if (file_exists($fullImagePath)) {
-            unlink($fullImagePath);
+    if ($affectedCount > 0 && $images) {
+        foreach ($images as $imageFileName) {
+            if ($imageFileName) {
+                $fullImagePath = $uploadDir . $imageFileName;
+                if (file_exists($fullImagePath)) {
+                    unlink($fullImagePath);
+                }
+            }
         }
     }
 
@@ -64,4 +69,3 @@ try {
 
 // 將結果數組編碼為 JSON 格式並輸出
 echo json_encode($result, JSON_NUMERIC_CHECK);
-

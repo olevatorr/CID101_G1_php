@@ -1,8 +1,4 @@
 <?php
-// 啟用錯誤報告
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // 設置響應頭為 JSON
 header('Content-Type: application/json');
 
@@ -15,19 +11,26 @@ require_once("config.php");
 
 try {
     // 開始事務
+    $data = json_decode(file_get_contents('php://input'), true);
     $pdo->beginTransaction();
 
     // 準備 SQL 語句，將知識數據插入到數據庫中
-    $sql = "INSERT INTO EVENT_ORDER (E_ID, U_ID, EO_attend) 
-                VALUES (:E_ID, :U_ID, :EO_attend)";
+    $sql = "INSERT INTO EVENT_ORDER (E_ID, U_ID, EO_ATTEND) 
+                VALUES (:E_ID, :U_ID, :EO_ATTEND)";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(":E_ID", $_POST["E_ID"]); // 綁定 E_ID 參數
-    $stmt->bindParam(":U_ID", $_POST["U_ID"]); // 綁定 U_ID 參數
-    $stmt->bindParam(":EO_attend", $_POST["EO_attend"]); // 綁定 EO_attend 參數
+    $stmt->bindValue(":E_ID", $data["E_ID"]); // 綁定 E_ID 參數
+    $stmt->bindValue(":U_ID", $data["U_ID"]); // 綁定 U_ID 參數
+    $stmt->bindValue(":EO_ATTEND", $data["EO_ATTEND"]); // 綁定 EO_ATTEND 參數
     $stmt->execute();
 
-    $E_ID = $pdo->lastInsertId();
+    $sql2 = "UPDATE EVENTS SET E_SIGN_UP = E_SIGN_UP + :NUM
+                WHERE E_ID = :E_ID";
+
+    $stmt2 = $pdo->prepare($sql2);
+    $stmt2->bindValue(":E_ID", $data["E_ID"]); // 綁定 E_ID 參數
+    $stmt2->bindValue(":NUM", $data["EO_ATTEND"]); // 綁定 EO_attend 參數
+    $stmt2->execute();
 
     // 提交事務
     $pdo->commit();
