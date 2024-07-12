@@ -21,30 +21,30 @@ try {
         SELECT eo.*, e.*
         FROM EVENT_ORDER eo
         INNER JOIN EVENTS e ON eo.E_ID = e.E_ID
-        WHERE eo.U_ID = :u_id
+        WHERE eo.U_ID = :U_ID
     ";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(['u_id' => $u_id]);
+    $stmt->execute([':U_ID' => $u_id]);
     $prodRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // 計算符合條件的訂單數量（包括所有狀態的活動）
     $countSql = "
-        SELECT COUNT(*) AS count
+        SELECT COUNT(*) AS COUNT
         FROM EVENT_ORDER eo
         INNER JOIN EVENTS e ON eo.E_ID = e.E_ID
-        WHERE eo.U_ID = :u_id
+        WHERE eo.U_ID = :U_ID
     ";
     $countStmt = $pdo->prepare($countSql);
-    $countStmt->execute(['u_id' => $u_id]);
+    $countStmt->execute([':U_ID' => $u_id]);
     $countRow = $countStmt->fetch(PDO::FETCH_ASSOC);
-    $event_orderCount = $countRow['count'];
+    $event_orderCount = $countRow['COUNT'];
 
     // 準備成功的 JSON 響應數據
     $result = [
         "error" => false,
         "msg" => "",
         "data" => $prodRows,
-        "event_orderCount" => $event_orderCount
+        "EVENT_ORDERCOUNT" => $event_orderCount
     ];
 } catch (PDOException $e) {
     $result = ["error" => true, "msg" => $e->getMessage()]; // 捕獲 PDO 異常，並準備錯誤的 JSON 響應數據

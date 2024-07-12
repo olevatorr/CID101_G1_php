@@ -18,19 +18,19 @@ try {
         pc.U_ID 
         FROM PRODUCT p
         JOIN PRODUCT_COLLECTION pc ON p.P_ID = pc.P_ID 
-        AND pc.U_ID = :u_id
+        AND pc.U_ID = :U_ID
     ";
     
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':u_id', $userId, PDO::PARAM_INT);
+    $stmt->bindParam(':U_ID', $userId, PDO::PARAM_INT);
     $stmt->execute();
     $prodRows = $stmt->fetchAll(PDO::FETCH_ASSOC); // 獲取所有查詢結果行，並以關聯數組的形式返回
     
     // 計算商品數量
-    $countSql = "SELECT COUNT(*) AS count FROM PRODUCT";
+    $countSql = "SELECT COUNT(*) AS COUNT FROM PRODUCT";
     $countResult = $pdo->query($countSql);
     $countRow = $countResult->fetch(PDO::FETCH_ASSOC);
-    $productCount = $countRow['count'];
+    $productCount = $countRow['COUNT'];
 
     $result = ["error" => false, "msg" => "", "data" => $prodRows, "productCount" => $productCount]; // 準備成功的 JSON 響應數據
 } catch (PDOException $e) {

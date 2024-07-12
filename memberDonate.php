@@ -21,9 +21,9 @@ try {
     $sql = "SELECT DO.*, U.U_NAME 
             FROM DONATE_ORDER DO
             LEFT JOIN USER U ON DO.U_ID = U.U_ID
-            WHERE DO.U_ID = :u_id";
+            WHERE DO.U_ID = :U_ID";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(['u_id' => $u_id]);
+    $stmt->execute(['U_ID' => $u_id]);
     $donateOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $result = ['success' => true, 'data' => $donateOrders]; // 準備成功的 JSON 響應數據
