@@ -12,7 +12,7 @@ try {
     // 檢查是否有傳遞 NS_ID 參數，如果有則準備 SQL 查詢語句，帶入分類條件
     if (isset($_GET['NS_ID'])) {
         $NS_ID = $_GET['NS_ID'];
-        $sql = "SELECT * FROM NEWS WHERE NS_ID = :NS_ID";
+        $sql = "SELECT * FROM NEWS WHERE NS_ID = :NS_ID ";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':NS_ID', $NS_ID, PDO::PARAM_INT);
         $stmt->execute();
