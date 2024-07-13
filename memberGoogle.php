@@ -22,7 +22,7 @@ try {
     $name = $data['name'] ?? '';
     $account = $data['account'] ?? '';
     
-    // Check if user exists
+    // 檢查用戶是否存在
     $sql = "SELECT * FROM USER WHERE U_EMAIL = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -30,13 +30,15 @@ try {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($user) {
-        // User exists, update last login time
-        $checkSql = "SELECT * FROM USER WHERE U_EMAIL = :email";
-        $checkStmt = $pdo->prepare($checkSql);
-        $checkStmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $checkStmt->execute();
-        $user = $checkStmt->fetch(PDO::FETCH_ASSOC);
-        echo json_encode(['success' => true, 'message' => '登入成功！', 'user' => $user]);
+        // User exists
+        if ($user['U_STATUS'] == 0) {
+           // User is inactive
+            echo json_encode(['success' => false, 'message' => '用戶已停權，無法登入']);
+        } else {
+            // User is active
+            echo json_encode(['success' => true, 'message' => '登入成功！', 'user' => $user]);
+            
+        }
     } else {
         // User doesn't exist, create new user
         $insertSql = "INSERT INTO USER (U_EMAIL, U_NAME, U_ACCOUNT, U_DATE) VALUES (:email, :name, :account, NOW())";
